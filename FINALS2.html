@@ -1,0 +1,133 @@
+<html>
+	<head>
+		<script src="./jquery.js"
+				type="text/javascript">
+		</script>
+	</head>
+	<body>
+		<h1>Facebook</h1>
+		<div id="content">
+		</div>
+		<button id="my_button">Get</button>
+	</body>
+	<script>
+	// Get some data
+	var x = "data";
+	var id = 1110903226;
+	var br = "<br>"
+	// Render in application
+	$(document).ready(function() {
+		$("#my_button").click(function() {
+			
+			//get access token
+			var access_token = "AAACEdEose0cBAPSfeDGD35PUpHbJYlaji1tEMT3Jhd1HB33NeFSbndE7S4zyWh2FbBTwM7ZA7wCqP5X9dvFqKSxZBXtVgdbsKjOZCpqSNqMrxPjrcnb";
+			var service_name = "https://graph.facebook.com/" + id + "?access_token=" + access_token + "&fields=picture,name,languages,gender,age_range,email,birthday,religion,relationship_status,cover,photos.limit(5)";
+			
+			
+			$.getJSON(service_name, function(data) 
+			{
+				var cover = "<img src=" + data["cover"]["source"] + ">"
+				var name = data["name"];
+				//var pic = "<img src=" + data["picture"]["data"]["url"] + ">"	
+				var gender = data["gender"];
+				var age = data["age_range"]["max"];
+				var email = data["email"];
+				var birthday = data ["birthday"];
+				var religion = data ["religion"];
+				var relation = data ["relationship_status"];
+				var religion = data ["religion"];
+				var languages = data ["languages"]["name"];
+				
+				var photos = "Photos: <br><br>";          
+				//loop through all data
+				for(var i = 0; i < data.photos.data.length; i++)
+				{
+				//add to list
+				photos += data.photos.data[i].from.name;
+				photos +=  "<img src=" + data.photos.data[i].picture + ">";
+				}
+				
+				//append to page
+				$("#content").append(cover + "<br>");	
+				$("#content").append(photos + "<br>");
+				//$("#content").append(pic);				
+				$("#content").append("<h2>" + name + "</h2>");
+				$("#content").append("Gender: " + gender + "<br>");
+				$("#content").append("Age: " + age+ "<br>");
+				$("#content").append("Email: " + email+ "<br>");
+				$("#content").append("Birthday: " + birthday + "<br>");
+				$("#content").append("Religion: " + religion + "<br>");
+				$("#content").append("Languages: " + languages + "<br>");
+				$("#content").append("Status: " + relation + "<br>");								
+			});
+			var event_service = "https://graph.facebook.com/" + id + "?access_token=" + access_token + "&fields=events";
+			$.getJSON(event_service, function(data) 
+			{
+				//get likes
+				var event = "Events:<br><br>";          
+				//loop through all data
+				for(var i = 0; i < data.events.data.length; i++)
+				{
+				//add to list
+				event +=  data.events.data[i].name + "<br>";
+
+				event += "<u><i>" + data.events.data[i].rsvp_status + "</u></i><br>";
+				}
+				//append to page
+				$("#content").append("<h3>" + event + "</h3>" );
+			});
+			/*
+			var photo_service = "https://graph.facebook.com/" + id + "?access_token=" + access_token + "&fields=photos.limit(5)";
+			$.getJSON(photo_service, function(data) 
+			{
+				//get likes
+				var photos = "Photos: <br><br>";          
+				//loop through all data
+				for(var i = 0; i < data.photos.data.length; i++)
+				{
+				//add to list
+				photos +=  "<img src="data.photos.data[i].picture + ">";
+				
+				}
+				//append to page
+				$("#content").append(photos);
+			});
+			*/
+			var like_service = "https://graph.facebook.com/" + id + "?access_token=" + access_token + "&fields=likes";
+			$.getJSON(like_service, function(data) 
+			{
+				//get likes
+				var like = "Likes:<br><br>";          
+				//loop through all data
+				for(var i = 0; i < data.likes.data.length; i++)
+				{
+				//add to list
+				like +=  data.likes.data[i].name + "<br>";
+				//l += data.likes.data[i].name + "<br>";
+				like += "<u><i>" + data.likes.data[i].category + "</u></i><br>";
+				//cate += "<u><i>" + data.likes.data[i].category + "</u></i><br>";
+				}
+				//append to page
+				$("#content").append("<h3>" + like + "</h3>" );
+			});
+			
+			var friend_service = "https://graph.facebook.com/" + id + "?access_token=" + access_token + "&fields=friends";
+			$.getJSON(friend_service, function(data) {
+				//get friend list
+				var friend = "Friends:<br><br>"; 
+				var list;
+				//loop though data
+				for(var i = 0; i < data.friends.data.length; i++)
+				{
+				//add to list
+				//friend += data.friends.data[i].name + "<br>";
+				list += data.friends.data[i].name + "<br>";
+				}
+				//append to page
+				$("#content").append("<h3>" + friend + "</h3>" + list);
+			});
+			
+		});
+	});
+	</script>
+</html>
